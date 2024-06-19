@@ -1,0 +1,61 @@
+use crate::workflow;
+// use crate::workflow::NodeChoices;
+// use crate::workflow::NodeFreeText;
+use crate::external::xdg;
+use crate::workflow::NodeRun;
+use anyhow::{anyhow, Result};
+use core::fmt;
+use std::fmt::Display;
+use std::process::Command;
+
+#[derive(Clone)]
+pub struct Run {}
+
+impl workflow::NodeChoices for Run {
+    fn prompt(&self) -> String {
+        "Run > ".to_string()
+    }
+
+    fn next(&self) -> Result<Vec<workflow::Node>> {
+        Ok(xdg::Xdg::list_desktop_applications()?.into_iter().map(|application| Run2 { application }.into_node()).collect())
+    }
+}
+
+impl Display for Run {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Run workflow")
+    }
+}
+
+pub struct Run2 {
+    application: xdg::Application,
+}
+
+impl workflow::NodeRun for Run2 {
+    fn run(&self) -> Result<()> {
+        let mut exec = self.application.exec.split(' ');
+        let mut command = Command::new(exec.next().unwrap());
+
+        for parameter in exec {
+            // See: https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#exec-variables
+            if matches!(parameter, "%f" | "%F" | "%u" | "%U") {
+                continue;
+            }
+
+            command.arg(parameter);
+        }
+
+        let status = command.status()?;
+        if !status.success() {
+            return Err(anyhow!("Command failed"));
+        }
+        Ok(())
+    }
+}
+
+impl Display for Run2 {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let comment = self.application.comment.clone().unwrap_or_default().replace('\n', "");
+        write!(f, "{} | {} | {}", self.application.name, comment, self.application.exec)
+    }
+}
