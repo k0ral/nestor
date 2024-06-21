@@ -39,6 +39,6 @@ impl workflow::NodeRun for Bookmarks2 {
 
 impl Display for Bookmarks2 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{} | {} | {}", self.buku_item.title, self.buku_item.description.replace('\n', ""), self.buku_item.uri)
+        write!(f, "BOOKMARK {} | {} | {}", self.buku_item.title, self.buku_item.description.replace('\n', ""), self.buku_item.uri)
     }
 }

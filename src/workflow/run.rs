@@ -56,6 +56,6 @@ impl workflow::NodeRun for Run2 {
 impl Display for Run2 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let comment = self.application.comment.clone().unwrap_or_default().replace('\n', "");
-        write!(f, "{} | {} | {}", self.application.name, comment, self.application.exec)
+        write!(f, "RUN {} | {} | {}", self.application.name, comment, self.application.exec)
     }
 }
