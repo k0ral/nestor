@@ -10,6 +10,7 @@ use std::{
     process::{self, ChildStdout, Command, Stdio},
 };
 
+#[allow(dead_code)]
 pub struct Surfraw {}
 
 #[derive(Debug, Clone)]
@@ -23,6 +24,7 @@ pub struct ElviIterator {
 }
 
 impl Surfraw {
+    #[allow(dead_code)]
     pub fn search(browser: &str, elvi: &str, query: &str) -> Result<()> {
         let status = Command::new("surfraw")
             .arg(format!("-browser={}", browser))
@@ -38,6 +40,7 @@ impl Surfraw {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub fn elvis_lines() -> Result<Lines<BufReader<ChildStdout>>> {
         let mut process = Command::new("surfraw").arg("-elvi").stdin(Stdio::null()).stdout(Stdio::piped()).spawn()?;
         let stdout: process::ChildStdout = process.stdout.take().unwrap();
@@ -46,6 +49,7 @@ impl Surfraw {
         Ok(reader.lines())
     }
 
+    #[allow(dead_code)]
     pub fn list_elvis() -> Result<Vec<Elvi>> {
         let lines = Self::elvis_lines()?;
         let elvi = ElviIterator::new(lines)?;
@@ -54,6 +58,7 @@ impl Surfraw {
 }
 
 impl ElviIterator {
+    #[allow(dead_code)]
     pub fn new(mut lines: Lines<BufReader<ChildStdout>>) -> Result<ElviIterator> {
         let line = lines.next().ok_or(anyhow!("Empty surfraw output"))??;
 

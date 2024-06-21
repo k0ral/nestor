@@ -1,4 +1,4 @@
-use crate::external::surfraw::{Elvi, Surfraw};
+use crate::external::s_search::{Provider, SSearch};
 use crate::workflow;
 use core::fmt;
 use std::fmt::Display;
@@ -7,7 +7,6 @@ use crate::workflow::NodeFreeText;
 use crate::workflow::NodeRun;
 use anyhow::Result;
 
-#[derive(Clone)]
 pub struct Websearch {
     browser: String,
 }
@@ -22,16 +21,16 @@ impl Websearch {
 
 impl workflow::NodeChoices for Websearch {
     fn prompt(&self) -> String {
-        "Elvi > ".to_string()
+        "Provider > ".to_string()
     }
 
     fn next(&self) -> Result<Vec<workflow::Node>> {
-        Ok(Surfraw::list_elvis()?
-            .iter()
-            .map(|elvi| {
+        Ok(SSearch::list_providers()?
+            .into_iter()
+            .map(|provider| {
                 Websearch2 {
                     browser: self.browser.clone(),
-                    elvi: elvi.clone(),
+                    provider,
                 }
                 .into_node()
             })
@@ -45,10 +44,9 @@ impl Display for Websearch {
     }
 }
 
-#[derive(Debug, Clone)]
 pub struct Websearch2 {
     browser: String,
-    elvi: Elvi,
+    provider: Provider,
 }
 
 impl Websearch2 {}
@@ -61,7 +59,7 @@ impl workflow::NodeFreeText for Websearch2 {
     fn next(&self, query: &str) -> Result<workflow::Node> {
         Ok(Websearch3 {
             browser: self.browser.clone(),
-            elvi: self.elvi.clone(),
+            provider: self.provider.clone(),
             query: query.to_string(),
         }
         .into_node())
@@ -70,25 +68,24 @@ impl workflow::NodeFreeText for Websearch2 {
 
 impl Display for Websearch2 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{} | {}", self.elvi.name, self.elvi.description)
+        write!(f, "WEBSEARCH {}", self.provider)
     }
 }
 
-#[derive(Clone)]
 pub struct Websearch3 {
     browser: String,
-    elvi: Elvi,
+    provider: Provider,
     query: String,
 }
 
 impl workflow::NodeRun for Websearch3 {
     fn run(&self) -> Result<()> {
-        Surfraw::search(&self.browser, &self.elvi.name, &self.query)
+        SSearch::search(&self.browser, &self.provider, &self.query)
     }
 }
 
 impl Display for Websearch3 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{} | {} | {}", self.browser, self.elvi, self.query)
+        write!(f, "{} | {} | {}", self.browser, self.provider, self.query)
     }
 }
