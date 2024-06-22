@@ -2,6 +2,7 @@ use anyhow::Result;
 use core::fmt;
 use std::fmt::Display;
 
+pub mod audio_sink;
 pub mod bookmarks;
 pub mod combo;
 pub mod run;
