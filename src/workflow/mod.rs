@@ -6,6 +6,7 @@ pub mod audio_sink;
 pub mod bookmarks;
 pub mod combo;
 pub mod run;
+pub mod unicode;
 pub mod websearch;
 
 pub enum Node {

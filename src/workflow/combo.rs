@@ -25,6 +25,9 @@ impl workflow::NodeChoices for Combo {
         let audio_sink = workflow::audio_sink::AudioSink {};
         output.append(&mut audio_sink.next()?);
 
+        let unicode = workflow::unicode::Unicode {};
+        output.append(&mut unicode.next()?);
+
         Ok(output)
     }
 }
