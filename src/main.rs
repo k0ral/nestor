@@ -6,7 +6,7 @@ mod external;
 mod workflow;
 
 fn main() -> Result<()> {
-    let prompter = Fuzzel {};
+    let prompter = Fuzzel::new("bottom".to_string(), "000000ff".to_string(), "000033ff".to_string(), 160);
     let mut current = workflow::combo::Combo {}.into_node();
 
     loop {

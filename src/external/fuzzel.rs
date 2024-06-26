@@ -5,12 +5,35 @@ use std::{
     process::{Command, Stdio},
 };
 
-pub struct Fuzzel {}
+pub struct Fuzzel {
+    anchor: String,
+    background: String,
+    selection: String,
+    width: u16,
+}
 
 impl Fuzzel {
+    pub fn new(anchor: String, background: String, selection: String, width: u16) -> Fuzzel {
+        Fuzzel {
+            anchor,
+            background,
+            selection,
+            width,
+        }
+    }
+
     pub fn prompt_freetext(&self, prompt: &str) -> Result<String> {
-        let output =
-            Command::new("fuzzel").arg("--dmenu").arg("--prompt").arg(prompt).stdin(Stdio::null()).stdout(Stdio::piped()).output()?;
+        let output = Command::new("fuzzel")
+            .arg(format!("--anchor={}", self.anchor))
+            .arg(format!("--background={}", self.background))
+            .arg(format!("--selection-color={}", self.selection))
+            .arg(format!("--width={}", self.width))
+            .arg("--dmenu")
+            .arg("--prompt")
+            .arg(prompt)
+            .stdin(Stdio::null())
+            .stdout(Stdio::piped())
+            .output()?;
         Ok(std::str::from_utf8(&output.stdout)?.to_string())
     }
 
@@ -19,6 +42,10 @@ impl Fuzzel {
         T: Display,
     {
         let mut process = Command::new("fuzzel")
+            .arg(format!("--anchor={}", self.anchor))
+            .arg(format!("--background={}", self.background))
+            .arg(format!("--selection-color={}", self.selection))
+            .arg(format!("--width={}", self.width))
             .arg("--prompt")
             .arg(prompt)
             .arg("--dmenu")
