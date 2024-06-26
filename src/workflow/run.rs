@@ -17,7 +17,7 @@ impl workflow::NodeChoices for Run {
     }
 
     fn next(&self) -> Result<Vec<workflow::Node>> {
-        Ok(xdg::Xdg::list_desktop_applications()?.into_iter().map(|application| Run2 { application }.into_node()).collect())
+        Ok(xdg::Xdg::list_desktop_applications().into_iter().map(|application| Run2 { application }.into_node()).collect())
     }
 }
 

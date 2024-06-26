@@ -27,7 +27,7 @@ impl Surfraw {
     #[allow(dead_code)]
     pub fn search(browser: &str, elvi: &str, query: &str) -> Result<()> {
         let status = Command::new("surfraw")
-            .arg(format!("-browser={}", browser))
+            .arg(format!("-browser={browser}"))
             .arg(elvi)
             .arg(query)
             .stdin(Stdio::null())
@@ -53,7 +53,7 @@ impl Surfraw {
     pub fn list_elvis() -> Result<Vec<Elvi>> {
         let lines = Self::elvis_lines()?;
         let elvi = ElviIterator::new(lines)?;
-        Ok(elvi.collect::<Result<Vec<Elvi>>>()?)
+        elvi.collect::<Result<Vec<Elvi>>>()
     }
 }
 

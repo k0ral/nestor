@@ -55,14 +55,14 @@ impl Fuzzel {
             .spawn()?;
         let mut stdin = process.stdin.take().unwrap();
 
-        for item in choices.iter() {
-            stdin.write_all(format!("{}", item).as_bytes())?;
+        for item in &choices {
+            stdin.write_all(item.to_string().as_bytes())?;
             stdin.write_all(b"\n")?;
         }
 
         drop(stdin);
         let output = process.wait_with_output()?;
-        println!("{:?}", output);
+        println!("{output:?}");
 
         let index: usize = std::str::from_utf8(&output.stdout)?.trim().parse()?;
         let selected = choices.remove(index);

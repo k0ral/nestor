@@ -16,7 +16,7 @@ pub struct Application {
 
 impl Xdg {
     pub fn open_uri(uri: &Uri) -> Result<()> {
-        println!("Browsing {:?}", uri);
+        println!("Browsing {uri:?}");
         let status = Command::new("xdg-open").arg(uri.to_string()).status()?;
         if !status.success() {
             println!("Unable to browse URI");
@@ -25,7 +25,7 @@ impl Xdg {
         Ok(())
     }
 
-    pub fn list_desktop_applications() -> Result<Vec<Application>> {
+    pub fn list_desktop_applications() -> Vec<Application> {
         let mut results = vec![];
         let locales = get_languages_from_env();
 
@@ -41,6 +41,6 @@ impl Xdg {
             }
         }
 
-        Ok(results)
+        results
     }
 }
