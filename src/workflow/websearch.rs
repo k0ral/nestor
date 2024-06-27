@@ -7,6 +7,7 @@ use crate::workflow::NodeFreeText;
 use crate::workflow::NodeRun;
 use anyhow::Result;
 
+#[derive(Debug)]
 pub struct Websearch {
     browser: String,
 }
@@ -24,6 +25,7 @@ impl workflow::NodeChoices for Websearch {
         "Provider > ".to_string()
     }
 
+    #[tracing::instrument]
     fn next(&self) -> Result<Vec<workflow::Node>> {
         Ok(SSearch::list_providers()?
             .into_iter()

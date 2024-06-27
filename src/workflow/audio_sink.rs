@@ -7,6 +7,7 @@ use anyhow::Result;
 use core::fmt;
 use std::fmt::Display;
 
+#[derive(Debug)]
 pub struct AudioSink {}
 
 impl workflow::NodeChoices for AudioSink {
@@ -14,6 +15,7 @@ impl workflow::NodeChoices for AudioSink {
         "Audio sink > ".to_string()
     }
 
+    #[tracing::instrument]
     fn next(&self) -> Result<Vec<workflow::Node>> {
         Ok(pipewire::Pipewire::list_audio_sinks()?.into_iter().map(|s| AudioSink2 { sink: s }.into_node()).collect())
     }

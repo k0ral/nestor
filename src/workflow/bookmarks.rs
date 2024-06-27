@@ -8,6 +8,7 @@ use anyhow::Result;
 use core::fmt;
 use std::fmt::Display;
 
+#[derive(Debug)]
 pub struct Bookmarks {}
 
 impl workflow::NodeChoices for Bookmarks {
@@ -15,6 +16,7 @@ impl workflow::NodeChoices for Bookmarks {
         "Bookmark > ".to_string()
     }
 
+    #[tracing::instrument]
     fn next(&self) -> Result<Vec<workflow::Node>> {
         Ok(buku::Buku::list()?.into_iter().map(|buku_item| Bookmarks2 { buku_item }.into_node()).collect())
     }

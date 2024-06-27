@@ -8,7 +8,7 @@ use core::fmt;
 use std::fmt::Display;
 use std::process::Command;
 
-#[derive(Clone)]
+#[derive(Debug)]
 pub struct Run {}
 
 impl workflow::NodeChoices for Run {
@@ -16,6 +16,7 @@ impl workflow::NodeChoices for Run {
         "Run > ".to_string()
     }
 
+    #[tracing::instrument]
     fn next(&self) -> Result<Vec<workflow::Node>> {
         Ok(xdg::Xdg::list_desktop_applications().into_iter().map(|application| Run2 { application }.into_node()).collect())
     }

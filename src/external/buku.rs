@@ -20,6 +20,7 @@ pub struct BukuItem {
 }
 
 impl Buku {
+    #[tracing::instrument]
     pub fn list() -> Result<Vec<BukuItem>> {
         let mut process = Command::new("buku").arg("nostdin").arg("--print").arg("--json").arg("--nc").stdout(Stdio::piped()).spawn()?;
         let stdout = process.stdout.take().unwrap();

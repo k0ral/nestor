@@ -8,6 +8,7 @@ use anyhow::Result;
 use core::fmt;
 use std::fmt::Display;
 
+#[derive(Debug)]
 pub struct Unicode {}
 
 impl workflow::NodeChoices for Unicode {
@@ -15,6 +16,7 @@ impl workflow::NodeChoices for Unicode {
         "Unicode > ".to_string()
     }
 
+    #[tracing::instrument]
     fn next(&self) -> Result<Vec<workflow::Node>> {
         Ok(unicode::Unicode::list_codepoints()?.into_iter().map(|c| Unicode2 { codepoint: c }.into_node()).collect())
     }
