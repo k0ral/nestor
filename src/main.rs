@@ -13,7 +13,7 @@ fn main() -> Result<()> {
 
     // External programs
     let prompter = fuzzel::Client::new("bottom".to_string(), "000000ff".to_string(), "000033ff".to_string(), 160);
-    let buku = Rc::new(buku::Client {});
+    let buku = Rc::new(buku::ClientWithCache::new(buku::Client {}, buku::Cache {}));
     let pipewire = Rc::new(pipewire::Client {});
     let s_search = Rc::new(s_search::Client {});
     let unicode = Rc::new(unicode::Unicode {});
@@ -46,5 +46,6 @@ fn main() -> Result<()> {
         }
     }
 
+    buku.refresh_cache()?;
     Ok(())
 }

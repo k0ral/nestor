@@ -9,12 +9,12 @@ use std::rc::Rc;
 
 #[derive(Debug)]
 pub struct Bookmarks {
-    buku: Rc<buku::Client>,
+    buku: Rc<buku::ClientWithCache>,
     xdg: Rc<xdg::Client>,
 }
 
 impl Bookmarks {
-    pub fn new(buku: Rc<buku::Client>, xdg: Rc<xdg::Client>) -> Bookmarks {
+    pub fn new(buku: Rc<buku::ClientWithCache>, xdg: Rc<xdg::Client>) -> Bookmarks {
         Bookmarks { buku, xdg }
     }
 }

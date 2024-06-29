@@ -1,6 +1,7 @@
 use core::fmt;
 use std::{
     fmt::Display,
+    fs::File,
     io::BufReader,
     process::{Command, Stdio},
 };
@@ -34,5 +35,58 @@ impl Client {
 impl Display for BukuItem {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}\t{}", self.title, self.uri)
+    }
+}
+
+#[derive(Debug)]
+pub struct Cache {}
+
+impl Cache {
+    pub fn list(&self) -> Result<Vec<BukuItem>> {
+        let xdg_dirs = xdg::BaseDirectories::with_prefix("nestor").unwrap();
+        let path = xdg_dirs.get_cache_file("buku.json");
+        let reader = File::open(path)?;
+        let items = serde_json::from_reader(reader)?;
+
+        Ok(items)
+    }
+
+    pub fn save(&self, items: &Vec<BukuItem>) -> Result<()> {
+        let xdg_dirs = xdg::BaseDirectories::with_prefix("nestor").unwrap();
+        xdg_dirs.create_cache_directory(".")?;
+        let path = xdg_dirs.get_cache_file("buku.json");
+        let writer = File::create(path)?;
+        serde_json::to_writer(writer, items)?;
+
+        Ok(())
+    }
+}
+
+#[derive(Debug)]
+pub struct ClientWithCache {
+    handler: Client,
+    cache: Cache,
+}
+
+impl ClientWithCache {
+    pub fn new(handler: Client, cache: Cache) -> ClientWithCache {
+        ClientWithCache { handler, cache }
+    }
+
+    pub fn list(&self) -> Result<Vec<BukuItem>> {
+        let items = self.cache.list();
+        if items.is_ok() {
+            items
+        } else {
+            let items = self.handler.list()?;
+            self.cache.save(&items)?;
+            Ok(items)
+        }
+    }
+
+    pub fn refresh_cache(&self) -> Result<()> {
+        tracing::info!("Refreshing buku cache...");
+        let items = self.handler.list()?;
+        self.cache.save(&items)
     }
 }
