@@ -62,7 +62,7 @@ impl Fuzzel {
 
         drop(stdin);
         let output = process.wait_with_output()?;
-        println!("{output:?}");
+        tracing::info!("Fuzzel output: {output:?}");
 
         let index: usize = std::str::from_utf8(&output.stdout)?.trim().parse()?;
         let selected = choices.remove(index);

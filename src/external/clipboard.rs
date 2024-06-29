@@ -7,12 +7,12 @@ impl Clipboard {
     pub fn copy(value: &str) -> Result<()> {
         let status = Command::new("wl-copy").arg("-p").arg(value).status()?;
         if !status.success() {
-            println!("Unable to copy into clipboard");
+            tracing::error!("Unable to copy into clipboard");
         }
 
         let status = Command::new("wl-copy").arg(value).status()?;
         if !status.success() {
-            println!("Unable to copy into clipboard");
+            tracing::error!("Unable to copy into clipboard");
         }
 
         Ok(())

@@ -16,10 +16,10 @@ pub struct Application {
 
 impl Xdg {
     pub fn open_uri(uri: &Uri) -> Result<()> {
-        println!("Browsing {uri:?}");
+        tracing::info!("Browsing {uri:?}");
         let status = Command::new("xdg-open").arg(uri.to_string()).status()?;
         if !status.success() {
-            println!("Unable to browse URI");
+            tracing::error!("Unable to browse URI");
         }
 
         Ok(())

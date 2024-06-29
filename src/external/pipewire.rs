@@ -79,7 +79,7 @@ impl Pipewire {
     pub fn enable_audio_sink(sink_id: u8) -> Result<()> {
         let status = Command::new("wpctl").arg("set-default").arg(format!("{sink_id}")).status()?;
         if !status.success() {
-            println!("Unable to enable audio sink");
+            tracing::error!("Unable to enable audio sink");
         }
 
         Ok(())
