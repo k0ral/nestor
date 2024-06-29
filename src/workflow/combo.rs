@@ -6,6 +6,7 @@ use std::fmt::Display;
 pub struct Combo {
     audio_sink: workflow::audio_sink::AudioSink,
     bookmarks: workflow::bookmarks::Bookmarks,
+    hyprland: workflow::hyprland::Hyprland,
     run: workflow::run::Run,
     unicode: workflow::unicode::Unicode,
     websearch: workflow::websearch::Websearch,
@@ -13,12 +14,13 @@ pub struct Combo {
 
 impl Combo {
     pub fn new(
-        audio_sink: workflow::audio_sink::AudioSink, bookmarks: workflow::bookmarks::Bookmarks, run: workflow::run::Run,
-        unicode: workflow::unicode::Unicode, websearch: workflow::websearch::Websearch,
+        audio_sink: workflow::audio_sink::AudioSink, bookmarks: workflow::bookmarks::Bookmarks, hyprland: workflow::hyprland::Hyprland,
+        run: workflow::run::Run, unicode: workflow::unicode::Unicode, websearch: workflow::websearch::Websearch,
     ) -> Combo {
         Combo {
             audio_sink,
             bookmarks,
+            hyprland,
             run,
             unicode,
             websearch,
@@ -36,6 +38,7 @@ impl workflow::NodeChoices for Combo {
 
         output.append(&mut self.audio_sink.next()?);
         output.append(&mut self.bookmarks.next()?);
+        output.append(&mut self.hyprland.next()?);
         output.append(&mut self.run.next()?);
         output.append(&mut self.websearch.next()?);
         output.append(&mut self.unicode.next()?);

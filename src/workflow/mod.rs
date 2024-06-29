@@ -5,6 +5,7 @@ use std::fmt::Display;
 pub mod audio_sink;
 pub mod bookmarks;
 pub mod combo;
+pub mod hyprland;
 pub mod run;
 pub mod unicode;
 pub mod websearch;
