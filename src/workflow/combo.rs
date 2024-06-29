@@ -3,7 +3,28 @@ use anyhow::Result;
 use core::fmt;
 use std::fmt::Display;
 
-pub struct Combo {}
+pub struct Combo {
+    audio_sink: workflow::audio_sink::AudioSink,
+    bookmarks: workflow::bookmarks::Bookmarks,
+    run: workflow::run::Run,
+    unicode: workflow::unicode::Unicode,
+    websearch: workflow::websearch::Websearch,
+}
+
+impl Combo {
+    pub fn new(
+        audio_sink: workflow::audio_sink::AudioSink, bookmarks: workflow::bookmarks::Bookmarks, run: workflow::run::Run,
+        unicode: workflow::unicode::Unicode, websearch: workflow::websearch::Websearch,
+    ) -> Combo {
+        Combo {
+            audio_sink,
+            bookmarks,
+            run,
+            unicode,
+            websearch,
+        }
+    }
+}
 
 impl workflow::NodeChoices for Combo {
     fn prompt(&self) -> String {
@@ -13,20 +34,11 @@ impl workflow::NodeChoices for Combo {
     fn next(&self) -> Result<Vec<workflow::Node>> {
         let mut output = vec![];
 
-        let websearch = workflow::websearch::Websearch::new("firefox");
-        output.append(&mut websearch.next()?);
-
-        let bookmarks = workflow::bookmarks::Bookmarks {};
-        output.append(&mut bookmarks.next()?);
-
-        let run = workflow::run::Run {};
-        output.append(&mut run.next()?);
-
-        let audio_sink = workflow::audio_sink::AudioSink {};
-        output.append(&mut audio_sink.next()?);
-
-        let unicode = workflow::unicode::Unicode {};
-        output.append(&mut unicode.next()?);
+        output.append(&mut self.audio_sink.next()?);
+        output.append(&mut self.bookmarks.next()?);
+        output.append(&mut self.run.next()?);
+        output.append(&mut self.websearch.next()?);
+        output.append(&mut self.unicode.next()?);
 
         Ok(output)
     }

@@ -5,16 +5,16 @@ use std::{
     process::{Command, Stdio},
 };
 
-pub struct Fuzzel {
+pub struct Client {
     anchor: String,
     background: String,
     selection: String,
     width: u16,
 }
 
-impl Fuzzel {
-    pub fn new(anchor: String, background: String, selection: String, width: u16) -> Fuzzel {
-        Fuzzel {
+impl Client {
+    pub fn new(anchor: String, background: String, selection: String, width: u16) -> Client {
+        Client {
             anchor,
             background,
             selection,

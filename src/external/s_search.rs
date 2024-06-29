@@ -3,7 +3,8 @@ use core::fmt;
 use std::fmt::Display;
 use std::process::{Command, Stdio};
 
-pub struct SSearch {}
+#[derive(Debug)]
+pub struct Client {}
 
 #[derive(Clone)]
 pub struct Provider(String);
@@ -14,8 +15,8 @@ impl Display for Provider {
     }
 }
 
-impl SSearch {
-    pub fn search(browser: &str, provider: &Provider, query: &str) -> Result<()> {
+impl Client {
+    pub fn search(&self, browser: &str, provider: &Provider, query: &str) -> Result<()> {
         let status = Command::new("s")
             .arg("-b")
             .arg(browser)
@@ -32,7 +33,7 @@ impl SSearch {
         Ok(())
     }
 
-    pub fn list_providers() -> Result<Vec<Provider>> {
+    pub fn list_providers(&self) -> Result<Vec<Provider>> {
         let output = Command::new("s").arg("--list-providers").stdin(Stdio::null()).stdout(Stdio::piped()).output()?;
         Ok(std::str::from_utf8(&output.stdout)?.lines().map(|p| Provider(p.to_owned())).collect())
     }

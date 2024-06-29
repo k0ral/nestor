@@ -5,6 +5,7 @@ use std::{
     process::{Command, Stdio},
 };
 
+#[derive(Debug)]
 pub struct Unicode {}
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -14,7 +15,7 @@ pub struct CodePoint {
 }
 
 impl Unicode {
-    pub fn list_codepoints() -> Result<Vec<CodePoint>> {
+    pub fn list_codepoints(&self) -> Result<Vec<CodePoint>> {
         let mut process = Command::new("uni")
             .arg("print")
             .arg("-f")

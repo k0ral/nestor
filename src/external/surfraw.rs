@@ -11,7 +11,7 @@ use std::{
 };
 
 #[allow(dead_code)]
-pub struct Surfraw {}
+pub struct Client {}
 
 #[derive(Debug, Clone)]
 pub struct Elvi {
@@ -23,7 +23,7 @@ pub struct ElviIterator {
     lines: Lines<BufReader<ChildStdout>>,
 }
 
-impl Surfraw {
+impl Client {
     #[allow(dead_code)]
     pub fn search(browser: &str, elvi: &str, query: &str) -> Result<()> {
         let status = Command::new("surfraw")

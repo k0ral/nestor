@@ -1,9 +1,9 @@
 use anyhow::Result;
 use std::process::Command;
 
-pub struct Clipboard {}
+pub struct Client {}
 
-impl Clipboard {
+impl Client {
     pub fn copy(value: &str) -> Result<()> {
         let status = Command::new("wl-copy").arg("-p").arg(value).status()?;
         if !status.success() {

@@ -1,14 +1,21 @@
-use crate::workflow;
-// use crate::workflow::NodeChoices;
-// use crate::workflow::NodeFreeText;
 use crate::external::pipewire;
+use crate::workflow;
 use crate::workflow::NodeRun;
 use anyhow::Result;
 use core::fmt;
 use std::fmt::Display;
+use std::rc::Rc;
 
 #[derive(Debug)]
-pub struct AudioSink {}
+pub struct AudioSink {
+    pipewire: Rc<pipewire::Client>,
+}
+
+impl AudioSink {
+    pub fn new(pipewire: Rc<pipewire::Client>) -> AudioSink {
+        AudioSink { pipewire }
+    }
+}
 
 impl workflow::NodeChoices for AudioSink {
     fn prompt(&self) -> String {
@@ -17,7 +24,18 @@ impl workflow::NodeChoices for AudioSink {
 
     #[tracing::instrument]
     fn next(&self) -> Result<Vec<workflow::Node>> {
-        Ok(pipewire::Pipewire::list_audio_sinks()?.into_iter().map(|s| AudioSink2 { sink: s }.into_node()).collect())
+        Ok(self
+            .pipewire
+            .list_audio_sinks()?
+            .into_iter()
+            .map(|s| {
+                AudioSink2 {
+                    pipewire: Rc::clone(&self.pipewire),
+                    sink: s,
+                }
+                .into_node()
+            })
+            .collect())
     }
 }
 
@@ -28,12 +46,13 @@ impl Display for AudioSink {
 }
 
 pub struct AudioSink2 {
+    pipewire: Rc<pipewire::Client>,
     sink: pipewire::AudioSink,
 }
 
 impl workflow::NodeRun for AudioSink2 {
     fn run(&self) -> Result<()> {
-        pipewire::Pipewire::enable_audio_sink(self.sink.id)
+        self.pipewire.enable_audio_sink(self.sink.id)
     }
 }
 

@@ -1,15 +1,23 @@
-use crate::workflow;
-// use crate::workflow::NodeChoices;
-// use crate::workflow::NodeFreeText;
 use crate::external::buku;
-use crate::external::xdg::Xdg;
+use crate::external::xdg;
+use crate::workflow;
 use crate::workflow::NodeRun;
 use anyhow::Result;
 use core::fmt;
 use std::fmt::Display;
+use std::rc::Rc;
 
 #[derive(Debug)]
-pub struct Bookmarks {}
+pub struct Bookmarks {
+    buku: Rc<buku::Client>,
+    xdg: Rc<xdg::Client>,
+}
+
+impl Bookmarks {
+    pub fn new(buku: Rc<buku::Client>, xdg: Rc<xdg::Client>) -> Bookmarks {
+        Bookmarks { buku, xdg }
+    }
+}
 
 impl workflow::NodeChoices for Bookmarks {
     fn prompt(&self) -> String {
@@ -18,7 +26,18 @@ impl workflow::NodeChoices for Bookmarks {
 
     #[tracing::instrument]
     fn next(&self) -> Result<Vec<workflow::Node>> {
-        Ok(buku::Buku::list()?.into_iter().map(|buku_item| Bookmarks2 { buku_item }.into_node()).collect())
+        Ok(self
+            .buku
+            .list()?
+            .into_iter()
+            .map(|buku_item| {
+                Bookmarks2 {
+                    buku_item,
+                    xdg: Rc::clone(&self.xdg),
+                }
+                .into_node()
+            })
+            .collect())
     }
 }
 
@@ -30,12 +49,13 @@ impl Display for Bookmarks {
 
 pub struct Bookmarks2 {
     buku_item: buku::BukuItem,
+    xdg: Rc<xdg::Client>,
 }
 
 impl workflow::NodeRun for Bookmarks2 {
     fn run(&self) -> Result<()> {
         let uri = self.buku_item.uri.parse::<http::Uri>()?;
-        Xdg::open_uri(&uri)
+        self.xdg.open_uri(&uri)
     }
 }
 

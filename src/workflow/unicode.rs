@@ -7,9 +7,18 @@ use crate::workflow::NodeRun;
 use anyhow::Result;
 use core::fmt;
 use std::fmt::Display;
+use std::rc::Rc;
 
 #[derive(Debug)]
-pub struct Unicode {}
+pub struct Unicode {
+    unicode: Rc<unicode::Unicode>,
+}
+
+impl Unicode {
+    pub fn new(unicode: Rc<unicode::Unicode>) -> Self {
+        Self { unicode }
+    }
+}
 
 impl workflow::NodeChoices for Unicode {
     fn prompt(&self) -> String {
@@ -18,7 +27,7 @@ impl workflow::NodeChoices for Unicode {
 
     #[tracing::instrument]
     fn next(&self) -> Result<Vec<workflow::Node>> {
-        Ok(unicode::Unicode::list_codepoints()?.into_iter().map(|c| Unicode2 { codepoint: c }.into_node()).collect())
+        Ok(self.unicode.list_codepoints()?.into_iter().map(|c| Unicode2 { codepoint: c }.into_node()).collect())
     }
 }
 
@@ -34,7 +43,7 @@ pub struct Unicode2 {
 
 impl workflow::NodeRun for Unicode2 {
     fn run(&self) -> Result<()> {
-        clipboard::Clipboard::copy(&self.codepoint.char)
+        clipboard::Client::copy(&self.codepoint.char)
     }
 }
 

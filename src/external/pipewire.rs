@@ -5,7 +5,8 @@ use std::{
     process::{Command, Stdio},
 };
 
-pub struct Pipewire {}
+#[derive(Debug)]
+pub struct Client {}
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Entity {
@@ -58,8 +59,8 @@ pub struct AudioSink {
     pub description: String,
 }
 
-impl Pipewire {
-    pub fn list_audio_sinks() -> Result<Vec<AudioSink>> {
+impl Client {
+    pub fn list_audio_sinks(&self) -> Result<Vec<AudioSink>> {
         let mut process = Command::new("pw-dump").arg("--no-colors").stdout(Stdio::piped()).spawn()?;
         let stdout = process.stdout.take().unwrap();
         let reader = BufReader::new(stdout);
@@ -76,7 +77,7 @@ impl Pipewire {
             .collect())
     }
 
-    pub fn enable_audio_sink(sink_id: u8) -> Result<()> {
+    pub fn enable_audio_sink(&self, sink_id: u8) -> Result<()> {
         let status = Command::new("wpctl").arg("set-default").arg(format!("{sink_id}")).status()?;
         if !status.success() {
             tracing::error!("Unable to enable audio sink");

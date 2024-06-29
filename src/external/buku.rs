@@ -8,7 +8,8 @@ use std::{
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 
-pub struct Buku {}
+#[derive(Debug)]
+pub struct Client {}
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct BukuItem {
@@ -19,9 +20,8 @@ pub struct BukuItem {
     pub uri: String,
 }
 
-impl Buku {
-    #[tracing::instrument]
-    pub fn list() -> Result<Vec<BukuItem>> {
+impl Client {
+    pub fn list(&self) -> Result<Vec<BukuItem>> {
         let mut process = Command::new("buku").arg("--nostdin").arg("--print").arg("--json").arg("--nc").stdout(Stdio::piped()).spawn()?;
         let stdout = process.stdout.take().unwrap();
         let reader = BufReader::new(stdout);

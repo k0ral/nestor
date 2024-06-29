@@ -5,7 +5,8 @@ use std::process::Command;
 
 use freedesktop_desktop_entry::{default_paths, get_languages_from_env, DesktopEntry, Iter};
 
-pub struct Xdg {}
+#[derive(Debug)]
+pub struct Client {}
 
 #[derive(Debug)]
 pub struct Application {
@@ -14,8 +15,8 @@ pub struct Application {
     pub exec: String,
 }
 
-impl Xdg {
-    pub fn open_uri(uri: &Uri) -> Result<()> {
+impl Client {
+    pub fn open_uri(&self, uri: &Uri) -> Result<()> {
         tracing::info!("Browsing {uri:?}");
         let status = Command::new("xdg-open").arg(uri.to_string()).status()?;
         if !status.success() {
@@ -25,7 +26,7 @@ impl Xdg {
         Ok(())
     }
 
-    pub fn list_desktop_applications() -> Vec<Application> {
+    pub fn list_desktop_applications(&self) -> Vec<Application> {
         let mut results = vec![];
         let locales = get_languages_from_env();
 

@@ -1,15 +1,22 @@
-use crate::workflow;
-// use crate::workflow::NodeChoices;
-// use crate::workflow::NodeFreeText;
 use crate::external::xdg;
+use crate::workflow;
 use crate::workflow::NodeRun;
 use anyhow::{anyhow, Result};
 use core::fmt;
 use std::fmt::Display;
 use std::process::Command;
+use std::rc::Rc;
 
 #[derive(Debug)]
-pub struct Run {}
+pub struct Run {
+    xdg: Rc<xdg::Client>,
+}
+
+impl Run {
+    pub fn new(xdg: Rc<xdg::Client>) -> Run {
+        Run { xdg }
+    }
+}
 
 impl workflow::NodeChoices for Run {
     fn prompt(&self) -> String {
@@ -18,7 +25,7 @@ impl workflow::NodeChoices for Run {
 
     #[tracing::instrument]
     fn next(&self) -> Result<Vec<workflow::Node>> {
-        Ok(xdg::Xdg::list_desktop_applications().into_iter().map(|application| Run2 { application }.into_node()).collect())
+        Ok(self.xdg.list_desktop_applications().into_iter().map(|application| Run2 { application }.into_node()).collect())
     }
 }
 
