@@ -7,26 +7,17 @@ use std::{
 
 pub struct Client {
     anchor: String,
-    background: String,
-    selection: String,
     width: u16,
 }
 
 impl Client {
-    pub fn new(anchor: String, background: String, selection: String, width: u16) -> Client {
-        Client {
-            anchor,
-            background,
-            selection,
-            width,
-        }
+    pub fn new(anchor: String, width: u16) -> Client {
+        Client { anchor, width }
     }
 
     pub fn prompt_freetext(&self, prompt: &str) -> Result<String> {
         let output = Command::new("fuzzel")
             .arg(format!("--anchor={}", self.anchor))
-            .arg(format!("--background={}", self.background))
-            .arg(format!("--selection-color={}", self.selection))
             .arg(format!("--width={}", self.width))
             .arg("--dmenu")
             .arg("--prompt")
@@ -43,8 +34,6 @@ impl Client {
     {
         let mut process = Command::new("fuzzel")
             .arg(format!("--anchor={}", self.anchor))
-            .arg(format!("--background={}", self.background))
-            .arg(format!("--selection-color={}", self.selection))
             .arg(format!("--width={}", self.width))
             .arg("--prompt")
             .arg(prompt)

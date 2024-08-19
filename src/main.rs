@@ -12,7 +12,7 @@ fn main() -> Result<()> {
     tracing_subscriber::fmt::fmt().with_span_events(FmtSpan::CLOSE).with_target(false).with_level(false).init();
 
     // External programs
-    let prompter = fuzzel::Client::new("bottom".to_string(), "000000ff".to_string(), "000033ff".to_string(), 160);
+    let prompter = fuzzel::Client::new("bottom".to_string(), 160);
     let buku = Rc::new(buku::ClientWithCache::new(buku::Client {}, buku::Cache {}));
     let hyprland = Rc::new(hyprland::Client {});
     let pipewire = Rc::new(pipewire::Client {});
