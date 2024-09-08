@@ -50,6 +50,10 @@ pub struct Properties {
     #[serde(rename = "node.nick")]
     #[serde(default)]
     pub node_nick: String,
+
+    #[serde(rename = "node.virtual")]
+    #[serde(default)]
+    pub node_virtual: bool,
 }
 
 #[derive(Debug)]
@@ -68,7 +72,7 @@ impl Client {
 
         Ok(entities
             .into_iter()
-            .filter(|e| e.info.props.media_class == "Audio/Sink")
+            .filter(|e| e.info.props.media_class == "Audio/Sink" && !e.info.props.node_virtual)
             .map(|e| AudioSink {
                 id: e.id,
                 name: e.info.props.node_nick,
