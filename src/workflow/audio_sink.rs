@@ -3,6 +3,7 @@ use crate::workflow;
 use crate::workflow::NodeRun;
 use anyhow::Result;
 use core::fmt;
+use notify_rust::{Notification, Urgency};
 use std::fmt::Display;
 use std::rc::Rc;
 
@@ -52,7 +53,14 @@ pub struct AudioSink2 {
 
 impl workflow::NodeRun for AudioSink2 {
     fn run(&self) -> Result<()> {
-        self.pipewire.enable_audio_sink(self.sink.id)
+        self.pipewire.enable_audio_sink(self.sink.id)?;
+        Notification::new()
+            .summary(&format!("Switched to audio sink {}", self.sink.name))
+            .body(&self.sink.description)
+            .urgency(Urgency::Low)
+            .show()?;
+
+        Ok(())
     }
 }
 

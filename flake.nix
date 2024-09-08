@@ -2,7 +2,7 @@
   inputs = {
     naersk.url = "github:nix-community/naersk";
     naersk.inputs.nixpkgs.follows = "nixpkgs";
-    nixpkgs.url = "github:NixOS/nixpkgs/6df37dc6a77654682fe9f071c62b4242b5342e04";
+    nixpkgs.url = "github:NixOS/nixpkgs/574d1eac1c200690e27b8eb4e24887f8df7ac27c";
   };
 
   outputs = { self, nixpkgs, naersk }:

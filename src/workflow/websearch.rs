@@ -4,6 +4,8 @@ use crate::workflow::NodeFreeText;
 use crate::workflow::NodeRun;
 use anyhow::Result;
 use core::fmt;
+use notify_rust::Notification;
+use notify_rust::Urgency;
 use std::fmt::Display;
 use std::rc::Rc;
 
@@ -90,7 +92,9 @@ pub struct Websearch3 {
 
 impl workflow::NodeRun for Websearch3 {
     fn run(&self) -> Result<()> {
-        self.client.search(&self.browser, &self.provider, &self.query)
+        self.client.search(&self.browser, &self.provider, &self.query)?;
+        Notification::new().summary(&format!("Launched search on {}", self.provider)).body(&self.query).urgency(Urgency::Low).show()?;
+        Ok(())
     }
 }
 

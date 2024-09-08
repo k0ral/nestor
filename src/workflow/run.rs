@@ -3,6 +3,7 @@ use crate::workflow;
 use crate::workflow::NodeRun;
 use anyhow::{anyhow, Result};
 use core::fmt;
+use notify_rust::{Notification, Urgency};
 use std::fmt::Display;
 use std::process::Command;
 use std::rc::Rc;
@@ -57,6 +58,12 @@ impl workflow::NodeRun for Run2 {
         if !status.success() {
             return Err(anyhow!("Command failed"));
         }
+
+        Notification::new()
+            .summary(&format!("Launched command {}", self.application.name))
+            .body(&self.application.exec)
+            .urgency(Urgency::Low)
+            .show()?;
         Ok(())
     }
 }

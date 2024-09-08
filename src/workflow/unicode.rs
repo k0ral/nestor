@@ -6,6 +6,8 @@ use crate::external::unicode;
 use crate::workflow::NodeRun;
 use anyhow::Result;
 use core::fmt;
+use notify_rust::Notification;
+use notify_rust::Urgency;
 use std::fmt::Display;
 use std::rc::Rc;
 
@@ -43,7 +45,13 @@ pub struct Unicode2 {
 
 impl workflow::NodeRun for Unicode2 {
     fn run(&self) -> Result<()> {
-        clipboard::Client::copy(&self.codepoint.char)
+        clipboard::Client::copy(&self.codepoint.char)?;
+        Notification::new()
+            .summary(&format!("Copied {} to clipboard", self.codepoint.char))
+            .body(&self.codepoint.name)
+            .urgency(Urgency::Low)
+            .show()?;
+        Ok(())
     }
 }
 

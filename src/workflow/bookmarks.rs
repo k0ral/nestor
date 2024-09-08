@@ -4,6 +4,8 @@ use crate::workflow;
 use crate::workflow::NodeRun;
 use anyhow::Result;
 use core::fmt;
+use notify_rust::Notification;
+use notify_rust::Urgency;
 use std::fmt::Display;
 use std::rc::Rc;
 
@@ -55,7 +57,13 @@ pub struct Bookmarks2 {
 impl workflow::NodeRun for Bookmarks2 {
     fn run(&self) -> Result<()> {
         let uri = self.buku_item.uri.parse::<http::Uri>()?;
-        self.xdg.open_uri(&uri)
+        self.xdg.open_uri(&uri)?;
+        Notification::new()
+            .summary(&format!("Opened bookmark {}", self.buku_item.title))
+            .body(&self.buku_item.uri)
+            .urgency(Urgency::Low)
+            .show()?;
+        Ok(())
     }
 }
 

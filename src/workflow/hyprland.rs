@@ -1,6 +1,7 @@
 use crate::workflow;
 use crate::workflow::NodeRun;
 use anyhow::Result;
+use notify_rust::{Notification, Urgency};
 use std::{
     fmt::{self, Display},
     rc::Rc,
@@ -54,8 +55,18 @@ impl workflow::NodeRun for HyprlandToggleMonitor {
     fn run(&self) -> Result<()> {
         if self.monitor.disabled {
             self.client.enable_monitor(&self.monitor.name)?;
+            Notification::new()
+                .summary(&format!("Enabled monitor {}", self.monitor.name))
+                .body(&self.monitor.description)
+                .urgency(Urgency::Low)
+                .show()?;
         } else {
             self.client.disable_monitor(&self.monitor.name)?;
+            Notification::new()
+                .summary(&format!("Disabled monitor {}", self.monitor.name))
+                .body(&self.monitor.description)
+                .urgency(Urgency::Low)
+                .show()?;
         }
 
         Ok(())
