@@ -21,14 +21,8 @@ fn main() -> Result<()> {
     let xdg = Rc::new(xdg::Client {});
 
     // Workflows
-    let audio_sink = workflow::audio_sink::AudioSink::new(Rc::clone(&pipewire));
-    let bookmarks = workflow::bookmarks::Bookmarks::new(Rc::clone(&buku), Rc::clone(&xdg));
-    let hyprland = workflow::hyprland::Hyprland::new(Rc::clone(&hyprland));
-    let run = workflow::run::Run::new(Rc::clone(&xdg));
-    let unicode = workflow::unicode::Unicode::new(Rc::clone(&unicode));
-    let websearch = workflow::websearch::Websearch::new("firefox", Rc::clone(&s_search));
-
-    let mut current = workflow::combo::Combo::new(audio_sink, bookmarks, hyprland, run, unicode, websearch).into_node();
+    //let mut current = workflow::combo::Combo::new(audio_sink, bookmarks, hyprland, run, unicode, websearch).into_node();
+    let mut current = workflow::root::Root::new(buku.clone(), hyprland, pipewire, s_search, unicode, xdg).into_node();
 
     loop {
         match current {

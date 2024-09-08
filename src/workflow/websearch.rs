@@ -49,7 +49,7 @@ impl workflow::NodeChoices for Websearch {
 
 impl Display for Websearch {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Websearch\t{}", self.browser)
+        write!(f, "Websearch")
     }
 }
 
@@ -79,7 +79,7 @@ impl workflow::NodeFreeText for Websearch2 {
 
 impl Display for Websearch2 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "WEBSEARCH {}", self.provider)
+        write!(f, "{}", self.provider)
     }
 }
 
@@ -100,6 +100,6 @@ impl workflow::NodeRun for Websearch3 {
 
 impl Display for Websearch3 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{} | {} | {}", self.browser, self.provider, self.query)
+        write!(f, "{}   {}   {}", self.browser, self.provider, self.query)
     }
 }

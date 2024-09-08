@@ -42,7 +42,7 @@ impl workflow::NodeChoices for Hyprland {
 
 impl Display for Hyprland {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Hyprland workflow")
+        write!(f, "Hyprland")
     }
 }
 
@@ -75,6 +75,6 @@ impl workflow::NodeRun for HyprlandToggleMonitor {
 
 impl Display for HyprlandToggleMonitor {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "HYPRLAND Toggle monitor {} | {}", self.monitor.name, self.monitor.description)
+        write!(f, "Toggle monitor {:30.30} {}", self.monitor.name, self.monitor.description)
     }
 }

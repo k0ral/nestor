@@ -32,7 +32,7 @@ impl workflow::NodeChoices for Run {
 
 impl Display for Run {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Run workflow")
+        write!(f, "Run command")
     }
 }
 
@@ -70,7 +70,6 @@ impl workflow::NodeRun for Run2 {
 
 impl Display for Run2 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let comment = self.application.comment.clone().unwrap_or_default().replace('\n', "");
-        write!(f, "RUN {} | {} | {}", self.application.name, comment, self.application.exec)
+        write!(f, "{:40.40}   {}", self.application.name, self.application.exec)
     }
 }

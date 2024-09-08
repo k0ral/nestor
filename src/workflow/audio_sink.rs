@@ -42,7 +42,7 @@ impl workflow::NodeChoices for AudioSink {
 
 impl Display for AudioSink {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Audio sink workflow")
+        write!(f, "Audio sink")
     }
 }
 
@@ -66,6 +66,6 @@ impl workflow::NodeRun for AudioSink2 {
 
 impl Display for AudioSink2 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "AUDIO {} | {} | {}", self.sink.id, self.sink.name, self.sink.description)
+        write!(f, "{:>3}   {:20.20}   {}", self.sink.id, self.sink.name, self.sink.description)
     }
 }

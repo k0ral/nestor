@@ -45,7 +45,7 @@ impl workflow::NodeChoices for Bookmarks {
 
 impl Display for Bookmarks {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Bookmarks workflow")
+        write!(f, "Bookmarks")
     }
 }
 
@@ -69,6 +69,6 @@ impl workflow::NodeRun for Bookmarks2 {
 
 impl Display for Bookmarks2 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "BOOKMARK {} | {} | {}", self.buku_item.title, self.buku_item.description.replace('\n', ""), self.buku_item.uri)
+        write!(f, "{:40.40}   {}", self.buku_item.title, self.buku_item.uri)
     }
 }

@@ -35,7 +35,7 @@ impl workflow::NodeChoices for Unicode {
 
 impl Display for Unicode {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Unicode workflow")
+        write!(f, "Unicode")
     }
 }
 
@@ -57,6 +57,6 @@ impl workflow::NodeRun for Unicode2 {
 
 impl Display for Unicode2 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "UNICODE {} | {}", self.codepoint.char, self.codepoint.name)
+        write!(f, "{:3.3}   {}", self.codepoint.char, self.codepoint.name)
     }
 }
