@@ -1,25 +1,18 @@
 use std::rc::Rc;
 
 use anyhow::Result;
-use config::Config;
 use external::{buku, fuzzel, hyprland, pipewire, s_search, sops, unicode, xdg};
-use serde::Deserialize;
 use tracing_subscriber::{self, fmt::format::FmtSpan};
 use workflow::NodeChoices;
 
+mod config;
 mod external;
 mod json;
 mod workflow;
 
-#[derive(Debug, Deserialize)]
-struct Settings {
-    pub browser: String,
-    pub secrets_file: String,
-}
-
 fn main() -> Result<()> {
     tracing_subscriber::fmt::fmt().with_span_events(FmtSpan::CLOSE).with_target(false).with_level(false).init();
-    let settings: Settings = Config::builder().add_source(config::File::with_name("nestor")).build()?.try_deserialize()?;
+    let config = config::Config::new()?;
 
     // External programs
     let prompter = fuzzel::Client::new("bottom".to_string(), 160);
@@ -36,9 +29,9 @@ fn main() -> Result<()> {
     let bookmarks = workflow::bookmarks::Bookmarks::new(Rc::clone(&buku), Rc::clone(&xdg));
     let hyprland = workflow::hyprland::Hyprland::new(Rc::clone(&hyprland));
     let run = workflow::run::Run::new(Rc::clone(&xdg));
-    let secrets = workflow::secrets::Secrets::new(Rc::clone(&sops), settings.secrets_file.into());
+    let secrets = workflow::secrets::Secrets::new(Rc::clone(&sops), config.secrets_file.into());
     let unicode = workflow::unicode::Unicode::new(Rc::clone(&unicode));
-    let websearch = workflow::websearch::Websearch::new(&settings.browser, Rc::clone(&s_search));
+    let websearch = workflow::websearch::Websearch::new(&config.browser, Rc::clone(&s_search));
 
     let all_workflows: Vec<workflow::Node> = vec![
         audio_sink.into_node(),
