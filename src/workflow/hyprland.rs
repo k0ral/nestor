@@ -26,7 +26,7 @@ impl workflow::NodeChoices for Hyprland {
     }
 
     #[tracing::instrument]
-    fn next(&self) -> Result<Vec<workflow::Node>> {
+    fn next(self: Box<Self>) -> Result<Vec<workflow::Node>> {
         let mut children = vec![];
         children.extend(self.client.list_monitors()?.into_iter().map(|monitor| {
             HyprlandToggleMonitor {

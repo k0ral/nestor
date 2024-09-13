@@ -1,8 +1,6 @@
-use crate::workflow;
-// use crate::workflow::NodeChoices;
-// use crate::workflow::NodeFreeText;
 use crate::external::clipboard;
 use crate::external::unicode;
+use crate::workflow;
 use crate::workflow::NodeRun;
 use anyhow::Result;
 use core::fmt;
@@ -28,7 +26,7 @@ impl workflow::NodeChoices for Unicode {
     }
 
     #[tracing::instrument]
-    fn next(&self) -> Result<Vec<workflow::Node>> {
+    fn next(self: Box<Self>) -> Result<Vec<workflow::Node>> {
         Ok(self.unicode.list_codepoints()?.into_iter().map(|c| Unicode2 { codepoint: c }.into_node()).collect())
     }
 }

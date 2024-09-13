@@ -30,7 +30,7 @@ impl workflow::NodeChoices for Websearch {
     }
 
     #[tracing::instrument]
-    fn next(&self) -> Result<Vec<workflow::Node>> {
+    fn next(self: Box<Self>) -> Result<Vec<workflow::Node>> {
         Ok(self
             .client
             .list_providers()?

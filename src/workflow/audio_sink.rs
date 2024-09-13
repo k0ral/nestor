@@ -24,7 +24,7 @@ impl workflow::NodeChoices for AudioSink {
     }
 
     #[tracing::instrument]
-    fn next(&self) -> Result<Vec<workflow::Node>> {
+    fn next(self: Box<Self>) -> Result<Vec<workflow::Node>> {
         Ok(self
             .pipewire
             .list_audio_sinks()?

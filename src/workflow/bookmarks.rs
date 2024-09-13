@@ -27,7 +27,7 @@ impl workflow::NodeChoices for Bookmarks {
     }
 
     #[tracing::instrument]
-    fn next(&self) -> Result<Vec<workflow::Node>> {
+    fn next(self: Box<Self>) -> Result<Vec<workflow::Node>> {
         Ok(self
             .buku
             .list()?

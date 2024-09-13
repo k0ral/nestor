@@ -5,8 +5,10 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0"
+config = "0.14.0"
 freedesktop-desktop-entry = "0.6"
 http = "1.1"
+itertools = "0.13"
 nom = "7"
 notify-rust = "4"
 serde = { version = "1", features = ["derive"] }

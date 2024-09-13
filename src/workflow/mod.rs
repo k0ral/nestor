@@ -4,10 +4,10 @@ use std::fmt::Display;
 
 pub mod audio_sink;
 pub mod bookmarks;
-pub mod combo;
 pub mod hyprland;
 pub mod root;
 pub mod run;
+pub mod secrets;
 pub mod unicode;
 pub mod websearch;
 
@@ -29,7 +29,7 @@ impl Display for Node {
 
 pub trait NodeChoices: Display {
     fn prompt(&self) -> String;
-    fn next(&self) -> Result<Vec<Node>>;
+    fn next(self: Box<Self>) -> Result<Vec<Node>>;
 
     fn into_node(self) -> Node
     where

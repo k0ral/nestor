@@ -4,6 +4,7 @@ pub mod fuzzel;
 pub mod hyprland;
 pub mod pipewire;
 pub mod s_search;
+pub mod sops;
 pub mod surfraw;
 pub mod unicode;
 pub mod xdg;
