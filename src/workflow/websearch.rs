@@ -63,7 +63,7 @@ impl Websearch2 {}
 
 impl workflow::NodeFreeText for Websearch2 {
     fn prompt(&self) -> String {
-        "Query > ".to_string()
+        format!("Query ({}) > ", self.provider)
     }
 
     fn next(&self, query: &str) -> Result<workflow::Node> {
