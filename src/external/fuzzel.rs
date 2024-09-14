@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use std::{
     fmt::Display,
     io::Write,
@@ -42,7 +42,7 @@ impl Client {
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
             .spawn()?;
-        let mut stdin = process.stdin.take().unwrap();
+        let mut stdin = process.stdin.take().ok_or(anyhow!("Unable to acquire fuzzel stdin"))?;
 
         for item in &choices {
             stdin.write_all(item.to_string().as_bytes())?;

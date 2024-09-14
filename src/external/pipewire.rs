@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use serde::{Deserialize, Serialize};
 use std::{
     io::BufReader,
@@ -66,7 +66,7 @@ pub struct AudioSink {
 impl Client {
     pub fn list_audio_sinks(&self) -> Result<Vec<AudioSink>> {
         let mut process = Command::new("pw-dump").arg("--no-colors").stdout(Stdio::piped()).spawn()?;
-        let stdout = process.stdout.take().unwrap();
+        let stdout = process.stdout.take().ok_or(anyhow!("Unable to read pw-dump stdout"))?;
         let reader = BufReader::new(stdout);
         let entities: Vec<Entity> = serde_json::from_reader(reader)?;
 

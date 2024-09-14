@@ -6,7 +6,7 @@ use std::{
     process::{Command, Stdio},
 };
 
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug)]
@@ -24,7 +24,7 @@ pub struct BukuItem {
 impl Client {
     pub fn list(&self) -> Result<Vec<BukuItem>> {
         let mut process = Command::new("buku").arg("--nostdin").arg("--print").arg("--json").arg("--nc").stdout(Stdio::piped()).spawn()?;
-        let stdout = process.stdout.take().unwrap();
+        let stdout = process.stdout.take().ok_or(anyhow!("Unable to read buku stdout"))?;
         let reader = BufReader::new(stdout);
         let items = serde_json::from_reader(reader)?;
 
@@ -43,7 +43,7 @@ pub struct Cache {}
 
 impl Cache {
     pub fn list(&self) -> Result<Vec<BukuItem>> {
-        let xdg_dirs = xdg::BaseDirectories::with_prefix("nestor").unwrap();
+        let xdg_dirs = xdg::BaseDirectories::with_prefix("nestor")?;
         let path = xdg_dirs.get_cache_file("buku.json");
         let reader = File::open(path)?;
         let items = serde_json::from_reader(reader)?;
@@ -52,7 +52,7 @@ impl Cache {
     }
 
     pub fn save(&self, items: &Vec<BukuItem>) -> Result<()> {
-        let xdg_dirs = xdg::BaseDirectories::with_prefix("nestor").unwrap();
+        let xdg_dirs = xdg::BaseDirectories::with_prefix("nestor")?;
         xdg_dirs.create_cache_directory(".")?;
         let path = xdg_dirs.get_cache_file("buku.json");
         let writer = File::create(path)?;

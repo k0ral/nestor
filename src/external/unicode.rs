@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use serde::{Deserialize, Serialize};
 use std::{
     io::BufReader,
@@ -26,7 +26,7 @@ impl Unicode {
             .arg("block:Emoticons")
             .stdout(Stdio::piped())
             .spawn()?;
-        let stdout = process.stdout.take().unwrap();
+        let stdout = process.stdout.take().ok_or(anyhow!("Unable to read uni stdout"))?;
         let reader = BufReader::new(stdout);
         let items = serde_json::from_reader(reader)?;
         Ok(items)

@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use serde::{Deserialize, Serialize};
 use std::{
     io::BufReader,
@@ -28,7 +28,7 @@ pub struct Monitor {
 impl Client {
     pub fn list_monitors(&self) -> Result<Vec<Monitor>> {
         let mut process = Command::new("hyprctl").arg("-j").arg("monitors").arg("all").stdout(Stdio::piped()).spawn()?;
-        let stdout = process.stdout.take().unwrap();
+        let stdout = process.stdout.take().ok_or(anyhow!("Unable to read hyprctl stdout"))?;
         let reader = BufReader::new(stdout);
         let monitors = serde_json::from_reader(reader)?;
 

@@ -43,7 +43,7 @@ impl Client {
     #[allow(dead_code)]
     pub fn elvis_lines() -> Result<Lines<BufReader<ChildStdout>>> {
         let mut process = Command::new("surfraw").arg("-elvi").stdin(Stdio::null()).stdout(Stdio::piped()).spawn()?;
-        let stdout: process::ChildStdout = process.stdout.take().unwrap();
+        let stdout: process::ChildStdout = process.stdout.take().ok_or(anyhow!("Unable to read surfraw stdout"))?;
         let reader = BufReader::new(stdout);
 
         Ok(reader.lines())
