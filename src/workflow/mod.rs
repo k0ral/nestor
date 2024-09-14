@@ -4,6 +4,7 @@ use std::fmt::Display;
 
 pub mod audio_sink;
 pub mod bookmarks;
+pub mod disks;
 pub mod hyprland;
 pub mod root;
 pub mod run;

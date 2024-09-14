@@ -6,5 +6,6 @@ pub mod pipewire;
 pub mod s_search;
 pub mod sops;
 pub mod surfraw;
+pub mod udiskie;
 pub mod unicode;
 pub mod xdg;
